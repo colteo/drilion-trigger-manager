@@ -62,6 +62,7 @@ class Plugin {
         $this->container->register('database', new Core\Database());
         $this->container->register('webhook_service', new Services\WebhookService());
         $this->container->register('trigger_manager', new Services\TriggerManager());
+        
     }
 
     private function initHooks() {
@@ -76,9 +77,9 @@ class Plugin {
         $triggerManager = $this->container->get('trigger_manager');
         
         // Registra i trigger predefiniti
-        $triggerManager->registerTrigger(new Triggers\UserMetaTrigger());
         $triggerManager->registerTrigger(new Triggers\BuoniPiattoTrigger());
         $triggerManager->registerTrigger(new Triggers\PuntiEsperienzaTrigger());
+        $triggerManager->registerTrigger(new Triggers\BirthDateTrigger());
     }
 
     public function addAdminMenu() {

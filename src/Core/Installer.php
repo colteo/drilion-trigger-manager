@@ -7,17 +7,17 @@ class Installer {
         // Inizializza le impostazioni di default
         $default_settings = [
             'plugin_enabled' => false,
-            'user_meta_first_name' => [
-                'enabled' => false,
-                'webhook_url' => '',
-                'notes' => ''
-            ],
             'user_meta_buoni_piatto' => [
                 'enabled' => false,
                 'webhook_url' => '',
                 'notes' => ''
             ],
             'user_meta_punti_esperienza' => [
+                'enabled' => false,
+                'webhook_url' => '',
+                'notes' => ''
+            ],
+            'user_meta_birth_date' => [
                 'enabled' => false,
                 'webhook_url' => '',
                 'notes' => ''
