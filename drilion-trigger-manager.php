@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Drilion Trigger Manager
  * Description: Gestione webhook per trigger su modifiche WordPress/WooCommerce
- * Version: 1.0.6
+ * Version: 1.1.1
  * Author: Your Name
  * License: GPL v2 or later
  */
@@ -13,6 +13,9 @@ namespace DrilionTrigger;
 if (!defined('ABSPATH')) {
     exit;
 }
+
+// Nascondi i warning/notice
+@ini_set('display_errors', 0);
 
 // Definizione costanti
 // define('DRILION_TRIGGER_VERSION', '1.0.0');
