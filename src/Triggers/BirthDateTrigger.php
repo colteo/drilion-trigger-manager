@@ -41,11 +41,20 @@ class BirthDateTrigger extends AbstractTrigger {
             return;
         }
 
+        $date_parts = explode('-', $meta_value);
+        if (count($date_parts) === 3) {
+            $formatted_date = $date_parts[2] . '/' . $date_parts[1] . '/' . $date_parts[0];
+        } else {
+            // Gestione del caso in cui il formato non sia quello atteso
+            $formatted_date = $meta_value;
+            error_log('Formato data non valido: ' . $meta_value);
+        }
+
         $data = [
             'trigger_id' => $this->getId(),
             'user_id' => $object_id,
             'email' => $user->user_email,
-            'birth_date' => $meta_value,
+            'birthday' => $formatted_date,
             'timestamp' => current_time('mysql')
         ];
 
