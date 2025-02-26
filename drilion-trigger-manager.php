@@ -83,6 +83,7 @@ class Plugin {
         $triggerManager->registerTrigger(new Triggers\BuoniPiattoTrigger());
         $triggerManager->registerTrigger(new Triggers\PuntiEsperienzaTrigger());
         $triggerManager->registerTrigger(new Triggers\BirthDateTrigger());
+        $triggerManager->registerTrigger(new Triggers\UserCreationTrigger());
     }
 
     public function addAdminMenu() {

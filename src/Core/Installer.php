@@ -22,6 +22,11 @@ class Installer {
                 'webhook_url' => '',
                 'notes' => ''
             ],
+            'user_creation' => [
+                'enabled' => false,
+                'webhook_url' => '',
+                'notes' => ''
+            ],
         ];
 
         // Aggiunge le opzioni solo se non esistono già
