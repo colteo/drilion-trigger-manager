@@ -22,6 +22,9 @@ class BirthDateTrigger extends AbstractTrigger {
         
         // Hook che viene eseguito DOPO l'aggiornamento
         add_action('updated_user_meta', [$this, 'handleMetaUpdate'], 10, 4);
+    
+        // Hook che viene eseguito quando il meta viene aggiunto per la prima volta
+        add_action('added_user_meta', [$this, 'handleMetaUpdate'], 10, 4);
     }
 
     public function beforeMetaUpdate($meta_id, $object_id, $meta_key, $meta_value) {
