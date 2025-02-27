@@ -2,8 +2,6 @@
 namespace DrilionTrigger\Triggers;
 
 class PuntiEsperienzaTrigger extends AbstractTrigger {
-    private $old_value = null;
-    
     public function getId(): string {
         return 'user_meta_punti_esperienza';
     }
@@ -17,21 +15,11 @@ class PuntiEsperienzaTrigger extends AbstractTrigger {
     }
 
     public function initialize(): void {
-        // Hook che viene eseguito PRIMA dell'aggiornamento
-        add_action('update_user_meta', [$this, 'beforeMetaUpdate'], 10, 4);
-        
         // Hook che viene eseguito DOPO l'aggiornamento
         add_action('updated_user_meta', [$this, 'handleMetaUpdate'], 10, 4);
         
         // Aggiungiamo un hook che viene eseguito alla fine della richiesta
         add_action('shutdown', [$this, 'processQueuedWebhooks']);
-    }
-
-    public function beforeMetaUpdate($meta_id, $object_id, $meta_key, $meta_value) {
-        if ($meta_key === 'lws_wre_points_programma_fedelta') {
-            // Salviamo il vecchio valore
-            $this->old_value = get_user_meta($object_id, 'lws_wre_points_programma_fedelta', true);
-        }
     }
 
     public function handleMetaUpdate($meta_id, $object_id, $meta_key, $meta_value) {
