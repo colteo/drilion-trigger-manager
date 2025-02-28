@@ -32,11 +32,16 @@ class BuoniPiattoTrigger extends AbstractTrigger {
         // Determina l'origine della modifica
         $source = $this->determineSource();
         
+        // Calcola l'equivalente in euro (100 BP = 1€)
+        $buoni_piatto_value = floatval($meta_value);
+        $euro_equivalent = round($buoni_piatto_value / 100, 2);
+        
         $data = [
             'trigger_id' => $this->getId(),
             'user_id' => $object_id,
             'email' => $user->user_email,
             'buoni_piatto' => $meta_value,
+            'buoni_piatto_euro' => $euro_equivalent,
             'source' => $source,
             'timestamp' => current_time('mysql')
         ];

@@ -2,6 +2,14 @@
 namespace DrilionTrigger\Triggers;
 
 class UserCreationTrigger extends AbstractTrigger {
+    // Array dei livelli di esperienza
+    private $experience_levels = [
+        1 => 1,      // Livello 1: Esploratore di Pasti (1 EXP)
+        2 => 500,    // Livello 2: Collezionista di Vaschette (500 EXP)
+        3 => 1000,   // Livello 3: Esperto di Piatti Pronti (1000 EXP)
+        4 => 2000,   // Livello 4: Mago dei Microonde (2000 EXP)
+        5 => 3000    // Livello 5: Guru del Pranzo al Volo (3000 EXP)
+    ];
     
     public function getId(): string {
         return 'user_creation';
@@ -54,6 +62,21 @@ class UserCreationTrigger extends AbstractTrigger {
         $punti_esperienza = get_user_meta($user_id, 'lws_wre_points_programma_fedelta', true);
         $birth_date = get_user_meta($user_id, 'billing_birth_date', true);
         
+        // Calcola l'equivalente in euro dei Buoni Piatto (100 BP = 1€)
+        $buoni_piatto_value = floatval($buoni_piatto ?: 0);
+        $euro_equivalent = round($buoni_piatto_value / 100, 2);
+        
+        // Calcola il livello attuale e i punti mancanti al livello successivo
+        $current_exp = intval($punti_esperienza ?: 0);
+        $current_level = $this->getCurrentLevel($current_exp);
+        $next_level = $current_level + 1;
+        
+        // Calcola punti mancanti al livello successivo
+        $punti_per_livello_successivo = 0;
+        if ($next_level <= 5) { // Verifica che non siamo già al livello massimo
+            $punti_per_livello_successivo = $this->experience_levels[$next_level] - $current_exp;
+        }
+        
         // Formatta la data di nascita se presente (nel formato GG/MM/AAAA come fatto in BirthDateTrigger)
         $formatted_birth_date = '';
         if (!empty($birth_date)) {
@@ -77,8 +100,12 @@ class UserCreationTrigger extends AbstractTrigger {
             'source' => $source,
             'has_buoni_piatto' => !empty($buoni_piatto),
             'buoni_piatto' => $buoni_piatto ?: 0,
+            'buoni_piatto_euro' => $euro_equivalent,
             'has_punti_esperienza' => !empty($punti_esperienza),
             'punti_esperienza' => $punti_esperienza ?: 0,
+            'current_level' => $current_level,
+            'punti_per_livello_successivo' => $punti_per_livello_successivo,
+            'is_max_level' => ($current_level == 5),
             'has_birth_date' => !empty($birth_date),
             'birthday' => $formatted_birth_date,
             'timestamp' => current_time('mysql')
@@ -142,5 +169,25 @@ class UserCreationTrigger extends AbstractTrigger {
 
         // Se non si riesce a determinare, ritorna 'unknown'
         return 'unknown';
+    }
+    
+    /**
+     * Calcola il livello attuale in base ai punti esperienza
+     * 
+     * @param int $exp_points Punti esperienza dell'utente
+     * @return int Livello attuale dell'utente
+     */
+    private function getCurrentLevel($exp_points) {
+        $level = 1; // Livello predefinito
+        
+        foreach ($this->experience_levels as $lvl => $req_points) {
+            if ($exp_points >= $req_points) {
+                $level = $lvl;
+            } else {
+                break;
+            }
+        }
+        
+        return $level;
     }
 }
